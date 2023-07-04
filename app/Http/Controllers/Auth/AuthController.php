@@ -35,4 +35,32 @@ class AuthController extends Controller
           ],201);
 
     }
+
+
+    public function login(Request $request)
+    {
+        $request->validate([
+                'username' => 'required|string|min:4',
+                'password' => 'required|min:6'
+        ]);
+
+        $user = User::whereUsername($request->username)->first();
+
+        if(!$user || !Hash::check($request->password, $user->password)) {
+            return response([
+                'message' => 'Invalid Credentials'
+            ], 422);
+        }
+
+        $token = $user->createToken('forumapp')->plainTextToken;
+
+        return response([
+            'user' => $user,
+            'token' => $token,
+            'message' => 'Logged In'
+          ],200);
+
+
+
+    }
 }
