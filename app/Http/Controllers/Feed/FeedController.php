@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Feed;
 use App\Models\Like;
+use App\Models\Comments;
 
 class FeedController extends Controller
 {
@@ -28,13 +29,6 @@ public function index()
 
 
 }
-
-
-
-
-
-
-
 
 
 
@@ -90,6 +84,37 @@ public function index()
 
  
 
+    }
+
+
+
+
+
+    public function comment(Request $request, $feed_id)
+    {
+
+        $request->validate([
+            'body' => 'required'
+        ]);
+
+        $comment = Comments::create([
+            'user_id' => auth()->id(),
+            'feed_id' => $feed_id,
+            'body' => $request->body
+        ]);
+
+        return response([
+            'message' => 'success'
+        ], 201);
+    }
+
+    public function getComments($feed_id)
+    {
+        $comments = Comments::with('feed')->with('user')->whereFeedId($feed_id)->latest()->get();
+
+        return response([
+            'comments' => $comments
+        ], 200);
     }
 
 }
