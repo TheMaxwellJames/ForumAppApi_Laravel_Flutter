@@ -16,6 +16,28 @@ use App\Models\Like;
 
 class FeedController extends Controller
 {
+
+
+public function index()
+{
+    $feeds = Feed::with('user')->latest()->get();
+
+    return response([
+        'feeds' => $feeds
+    ], 200);
+
+
+}
+
+
+
+
+
+
+
+
+
+
     public function store(Request $request)
     {
         $request->validate([
