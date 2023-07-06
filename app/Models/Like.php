@@ -6,17 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-class Feed extends Model
+class Like extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'content'
+        'feed_id',
+        'user_id'
     ];
 
-    public function user(): BelongsTo
+    public function feed(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
     }
 }
